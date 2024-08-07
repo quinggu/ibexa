@@ -1,0 +1,11 @@
+/vendor/
+
+###> other files ###
+/.idea
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+
