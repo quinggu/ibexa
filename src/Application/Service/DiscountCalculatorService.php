@@ -27,18 +27,17 @@ readonly class DiscountCalculatorService
         return $totalAmount - $totalDiscountAmount;
     }
 
+    /**
+     * Sort discounts with exclusive ones first, then by priority.
+     */
     private function sortDiscounts(array $discounts): array
     {
         usort($discounts, function (DiscountInterface $a, DiscountInterface $b) {
-            // Prioritize exclusive discounts over non-exclusive
-            if ($a->isExclusive() && !$b->isExclusive()) {
-                return -1; // Exclusive discounts should come first
-            }
-            if (!$a->isExclusive() && $b->isExclusive()) {
-                return 1;  // Non-exclusive discounts should come after exclusive
-            }
-            // If both discounts have the same exclusivity, sort by priority
-            return $a->getPriority() <=> $b->getPriority();
+            // Compare exclusivity: exclusive discounts come first
+            $exclusiveComparison = (int)$b->isExclusive() - (int)$a->isExclusive();
+
+            // If exclusivity is the same, compare by priority (higher priority first)
+            return $exclusiveComparison ?: $b->getPriority() <=> $a->getPriority();
         });
 
         return $discounts;

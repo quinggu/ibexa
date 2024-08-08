@@ -125,7 +125,7 @@ class DiscountCalculatorServiceTest extends TestCase
         $total = $calculator->calculateTotal($catalog);
 
         // Total = 200 + 2 * 300 = 800 PLN
-        // Percentage discount = 10% of 600 PLN (only for P002) = 60 PLN
+        // Percentage discount = 10% of 600 (2 * 300) PLN (only for P002) = 60 PLN
         // Final total = 800 - 60 = 740 PLN
         $this->assertEquals(740, $total); // Expected result is 740 PLN
     }
