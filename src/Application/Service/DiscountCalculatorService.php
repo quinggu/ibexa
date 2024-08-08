@@ -5,21 +5,20 @@ declare(strict_types=1);
 readonly class DiscountCalculatorService
 {
 
-    public function __construct(private Catalog $catalog)
+    public function __construct(private array $discounts)
     {
     }
 
-    public function calculateTotal(): int
+    public function calculateTotal(Catalog $catalog): int
     {
         // Retrieve the list of products and discounts from the catalog
-        $products = $this->catalog->getProducts();
-        $discounts = $this->catalog->getDiscounts();
+        $products = $catalog->getProducts();
 
         // Sort the discounts so that exclusive discounts come first
-        $sortedDiscounts = $this->sortDiscounts($discounts);
+        $sortedDiscounts = $this->sortDiscounts($this->discounts);
 
         // Calculate the total amount of all products before applying discounts
-        $totalAmount = $this->calculateTotalAmount($products);
+        $totalAmount = $catalog->getTotalAmount();
 
         // Calculate the total amount of discounts to apply
         $totalDiscountAmount = $this->calculateTotalDiscount($products, $sortedDiscounts);
@@ -43,14 +42,6 @@ readonly class DiscountCalculatorService
         });
 
         return $discounts;
-    }
-
-    private function calculateTotalAmount(array $products): int
-    {
-        return array_reduce($products, function (int $carry, Product $product) {
-            // Sum the product of price and quantity for each product
-            return $carry + ($product->getPrice()->getAmount() * $product->getQuantity());
-        }, 0);
     }
 
     private function calculateTotalDiscount(array $products, array $discounts): int

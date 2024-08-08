@@ -19,13 +19,17 @@ class DiscountCalculatorServiceTest extends TestCase
     {
         $product1 = new Product('P001', new Price(500, 'PLN'), 2);
 
-        $fixedDiscount = new FixedDiscount(100, 'PLN', priority: 1, exclusive: false);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
 
-        $catalog = new Catalog([$product1], [$fixedDiscount]);
-        $calculator = new DiscountCalculatorService($catalog);
+        // Create discounts
+        $discounts = [
+            new FixedDiscount(100, 'PLN', priority: 1, exclusive: false),
+        ];
 
-        $total = $calculator->calculateTotal();
+        $calculator = new DiscountCalculatorService($discounts);
 
+        $total = $calculator->calculateTotal($catalog);
         // Total = 2 * 500 = 1000 PLN
         // Fixed discount = 100 PLN
         // Final total = 1000 - 100 = 900 PLN
@@ -36,12 +40,17 @@ class DiscountCalculatorServiceTest extends TestCase
     {
         $product1 = new Product('P001', new Price(200, 'PLN'), 2);
 
-        $percentageDiscount = new PercentageDiscount(10, [], priority: 1, exclusive: false);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
 
-        $catalog = new Catalog([$product1], [$percentageDiscount]);
-        $calculator = new DiscountCalculatorService($catalog);
+        // Create discounts
+        $discounts = [
+            new PercentageDiscount(10, [], priority: 1, exclusive: false),
+        ];
 
-        $total = $calculator->calculateTotal();
+        $calculator = new DiscountCalculatorService($discounts);
+
+        $total = $calculator->calculateTotal($catalog);
 
         // Total = 2 * 200 = 400 PLN
         // Percentage discount = 10% of 400 PLN = 40 PLN
@@ -54,13 +63,18 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(50, 'PLN'), 10); // 10 units
         $product2 = new Product('P002', new Price(30, 'PLN'), 5);  // 5 units
 
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
+
         // Volume discount of 100 PLN if at least 15 items are purchased
-        $volumeDiscount = new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false);
+        $discounts = [
+            new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false),
+        ];
 
-        $catalog = new Catalog([$product1, $product2], [$volumeDiscount]);
-        $calculator = new DiscountCalculatorService($catalog);
+        $calculator = new DiscountCalculatorService($discounts);
 
-        $total = $calculator->calculateTotal();
+        $total = $calculator->calculateTotal($catalog);
 
         // Total = 50 * 10 + 30 * 5 = 500 + 150 = 650 PLN
         // Volume discount = 100 PLN (since 15 or more items were purchased)
@@ -73,13 +87,18 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(500, 'PLN'), 1);
         $product2 = new Product('P002', new Price(300, 'PLN'), 2);
 
-        $fixedDiscount = new FixedDiscount(100, 'PLN', priority: 1, exclusive: false);
-        $percentageDiscount = new PercentageDiscount(10, [], priority: 2, exclusive: true);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
 
-        $catalog = new Catalog([$product1, $product2], [$fixedDiscount, $percentageDiscount]);
-        $calculator = new DiscountCalculatorService($catalog);
+        $discounts = [
+            new FixedDiscount(100, 'PLN', priority: 1, exclusive: false),
+            new PercentageDiscount(10, [], priority: 2, exclusive: true),
+        ];
 
-        $total = $calculator->calculateTotal();
+        $calculator = new DiscountCalculatorService($discounts);
+
+        $total = $calculator->calculateTotal($catalog);
 
         // Initial total = 500 + 2 * 300 = 1100 PLN
         // Percentage discount = 10% of 1100 PLN = 110 PLN
@@ -93,12 +112,17 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(200, 'PLN'), 1);
         $product2 = new Product('P002', new Price(300, 'PLN'), 2);
 
-        $percentageDiscount = new PercentageDiscount(10, ['P002'], priority: 1, exclusive: false);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
 
-        $catalog = new Catalog([$product1, $product2], [$percentageDiscount]);
-        $calculator = new DiscountCalculatorService($catalog);
+        $discounts = [
+            new PercentageDiscount(10, ['P002'], priority: 1, exclusive: false),
+        ];
 
-        $total = $calculator->calculateTotal();
+        $calculator = new DiscountCalculatorService($discounts);
+
+        $total = $calculator->calculateTotal($catalog);
 
         // Total = 200 + 2 * 300 = 800 PLN
         // Percentage discount = 10% of 600 PLN (only for P002) = 60 PLN
@@ -111,20 +135,20 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(50, 'PLN'), 10); // 10 units
         $product2 = new Product('P002', new Price(30, 'PLN'), 5);  // 5 units
 
-        // Volume discount of 100 PLN if at least 15 items are purchased
-        $volumeDiscount = new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
 
-        // Percentage discount of 10%, exclusive
-        $percentageDiscount = new PercentageDiscount(10, [], priority: 2, exclusive: true);
+        $discounts = [
+            // Volume discount of 100 PLN if at least 15 items are purchased
+            new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false),
+            // Percentage discount of 10%, exclusive
+            new PercentageDiscount(10, [], priority: 2, exclusive: true),
+        ];
 
-        // Creating catalog with products and discounts
-        $catalog = new Catalog([$product1, $product2], [$volumeDiscount, $percentageDiscount]);
+        $calculator = new DiscountCalculatorService($discounts);
 
-        // Creating calculator service with the catalog
-        $calculator = new DiscountCalculatorService($catalog);
-
-        // Calculating the total after applying discounts
-        $total = $calculator->calculateTotal();
+        $total = $calculator->calculateTotal($catalog);
 
         // Total = 50 * 10 + 30 * 5 = 500 + 150 = 650 PLN
         // Percentage discount = 10% of 650 PLN = 65 PLN
@@ -138,20 +162,20 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(50, 'PLN'), 10); // 10 units
         $product2 = new Product('P002', new Price(30, 'PLN'), 5);  // 5 units
 
-        // Volume discount of 100 PLN if at least 15 items are purchased
-        $volumeDiscount = new VolumeDiscount(100, 'PLN', 15, priority: 2, exclusive: false);
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
 
-        // Percentage discount of 10%
-        $percentageDiscount = new PercentageDiscount(10, [], priority: 1, exclusive: false);
+        $discounts = [
+            // Volume discount of 100 PLN if at least 15 items are purchased
+            new VolumeDiscount(100, 'PLN', 15, priority: 2, exclusive: false),
+            // Percentage discount of 10%
+            new PercentageDiscount(10, [], priority: 1, exclusive: false),
+        ];
 
-        // Creating catalog with products and discounts
-        $catalog = new Catalog([$product1, $product2], [$volumeDiscount, $percentageDiscount]);
+        $calculator = new DiscountCalculatorService($discounts);
 
-        // Creating calculator service with the catalog
-        $calculator = new DiscountCalculatorService($catalog);
-
-        // Calculating the total after applying discounts
-        $total = $calculator->calculateTotal();
+        $total = $calculator->calculateTotal($catalog);
 
         // Total = 50 * 10 + 30 * 5 = 500 + 150 = 650 PLN
         // Percentage discount = 10% of 650 PLN = 65 PLN
@@ -165,18 +189,21 @@ class DiscountCalculatorServiceTest extends TestCase
         $product1 = new Product('P001', new Price(50, 'PLN'), 20); // 20 units
         $product2 = new Product('P002', new Price(30, 'PLN'), 10);  // 10 units
 
+        $catalog = new Catalog();
+        $catalog->addProduct($product1);
+        $catalog->addProduct($product2);
+
         // Create a volume discount and a percentage discount. The volume discount has higher priority and is exclusive.
-        $volumeDiscount = new VolumeDiscount(150, 'PLN', 15, priority: 2, exclusive: true); // 150 PLN discount if at least 15 items are purchased
-        $percentageDiscount = new PercentageDiscount(10, [], priority: 1, exclusive: false); // 10% discount
+        $discounts = [
+            // 150 PLN discount if at least 15 items are purchased
+            new VolumeDiscount(150, 'PLN', 15, priority: 2, exclusive: true),
+            // 10% discount
+            new PercentageDiscount(10, [], priority: 1, exclusive: false)
+        ];
 
-        // Create a catalog with products and discounts
-        $catalog = new Catalog([$product1, $product2], [$volumeDiscount, $percentageDiscount]);
+        $calculator = new DiscountCalculatorService($discounts);
 
-        // Create an instance of the service with the catalog
-        $calculator = new DiscountCalculatorService($catalog);
-
-        // Calculate the total value after applying discounts
-        $total = $calculator->calculateTotal();
+        $total = $calculator->calculateTotal($catalog);
 
         // Expected total value after applying the volume discount with higher priority
         // Total cost before discount: (50 * 20) + (30 * 10) = 1000 + 300 = 1300
