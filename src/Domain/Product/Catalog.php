@@ -5,12 +5,12 @@ declare(strict_types=1);
 class Catalog
 {
     public function __construct(
-        private array $products = []
-    )
-    {
+        private array          $products = [],
+        private readonly array $discounts = []
+    ) {
     }
 
-    public function addProduct(Product $product)
+    public function addProduct(Product $product): void
     {
         $this->products[] = $product;
     }
@@ -18,6 +18,11 @@ class Catalog
     public function getProducts(): array
     {
         return $this->products;
+    }
+
+    public function getDiscounts(): array
+    {
+        return $this->discounts;
     }
 
     public function getTotalAmount(): int

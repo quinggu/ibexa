@@ -8,8 +8,7 @@ readonly class Price implements PriceInterface
     public function __construct(
         private int    $amount,
         private string $currency
-    )
-    {
+    ) {
     }
 
     public function getAmount(): int
