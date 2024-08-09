@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-abstract readonly class AbstractDiscount implements DiscountInterface
+namespace Ibexa\Domain\Discount;
+
+use Ibexa\Domain\Product\ProductInterface;
+
+abstract class AbstractDiscount implements DiscountInterface
 {
     public function __construct(
-        private array $applicableProducts = [],
-        private int   $priority = 0,
-        private bool  $exclusive = false
+        protected array $applicableProducts = [],
+        protected int   $priority = 0,
+        protected bool  $exclusive = false
     ) {
     }
 

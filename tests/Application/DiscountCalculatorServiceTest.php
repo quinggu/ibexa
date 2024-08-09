@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace tests\Application;
 
-use Catalog;
-use DiscountCalculatorService;
-use FixedDiscount;
-use PercentageDiscount;
+use Ibexa\Application\Service\DiscountCalculatorService;
+use Ibexa\Domain\Discount\FixedDiscount;
+use Ibexa\Domain\Discount\PercentageDiscount;
+use Ibexa\Domain\Discount\VolumeDiscount;
+use Ibexa\Domain\Product\Catalog;
+use Ibexa\Domain\Product\Price;
+use Ibexa\Domain\Product\Product;
 use PHPUnit\Framework\TestCase;
-use Price;
-use Product;
-use VolumeDiscount;
 
 class DiscountCalculatorServiceTest extends TestCase
 {
@@ -24,7 +24,7 @@ class DiscountCalculatorServiceTest extends TestCase
 
         // Create discounts
         $discounts = [
-            new FixedDiscount(100, 'PLN', priority: 1, exclusive: false),
+            new FixedDiscount(100, 'PLN'),
         ];
 
         $calculator = new DiscountCalculatorService($discounts);
@@ -45,7 +45,7 @@ class DiscountCalculatorServiceTest extends TestCase
 
         // Create discounts
         $discounts = [
-            new PercentageDiscount(10, [], priority: 1, exclusive: false),
+            new PercentageDiscount(10, []),
         ];
 
         $calculator = new DiscountCalculatorService($discounts);
@@ -69,7 +69,7 @@ class DiscountCalculatorServiceTest extends TestCase
 
         // Volume discount of 100 PLN if at least 15 items are purchased
         $discounts = [
-            new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false),
+            new VolumeDiscount(100, 'PLN', 15),
         ];
 
         $calculator = new DiscountCalculatorService($discounts);
@@ -92,7 +92,7 @@ class DiscountCalculatorServiceTest extends TestCase
         $catalog->addProduct($product2);
 
         $discounts = [
-            new FixedDiscount(100, 'PLN', priority: 1, exclusive: false),
+            new FixedDiscount(100, 'PLN'),
             new PercentageDiscount(10, [], priority: 2, exclusive: true),
         ];
 
@@ -117,7 +117,7 @@ class DiscountCalculatorServiceTest extends TestCase
         $catalog->addProduct($product2);
 
         $discounts = [
-            new PercentageDiscount(10, ['P002'], priority: 1, exclusive: false),
+            new PercentageDiscount(10, ['P002']),
         ];
 
         $calculator = new DiscountCalculatorService($discounts);
@@ -141,7 +141,7 @@ class DiscountCalculatorServiceTest extends TestCase
 
         $discounts = [
             // Volume discount of 100 PLN if at least 15 items are purchased
-            new VolumeDiscount(100, 'PLN', 15, priority: 1, exclusive: false),
+            new VolumeDiscount(100, 'PLN', 15),
             // Percentage discount of 10%, exclusive
             new PercentageDiscount(10, [], priority: 2, exclusive: true),
         ];
@@ -170,7 +170,7 @@ class DiscountCalculatorServiceTest extends TestCase
             // Volume discount of 100 PLN if at least 15 items are purchased
             new VolumeDiscount(100, 'PLN', 15, priority: 2, exclusive: false),
             // Percentage discount of 10%
-            new PercentageDiscount(10, [], priority: 1, exclusive: false),
+            new PercentageDiscount(10, []),
         ];
 
         $calculator = new DiscountCalculatorService($discounts);
@@ -198,7 +198,7 @@ class DiscountCalculatorServiceTest extends TestCase
             // 150 PLN discount if at least 15 items are purchased
             new VolumeDiscount(150, 'PLN', 15, priority: 2, exclusive: true),
             // 10% discount
-            new PercentageDiscount(10, [], priority: 1, exclusive: false)
+            new PercentageDiscount(10, [])
         ];
 
         $calculator = new DiscountCalculatorService($discounts);

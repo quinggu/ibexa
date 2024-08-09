@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+namespace Ibexa\Infrastructure\Repository;
+
+use Ibexa\Domain\Product\Catalog;
+
 class InMemoryCatalogRepository implements CatalogRepository
 {
     private array $storage = [];

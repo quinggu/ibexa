@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+namespace Ibexa\Application\Service;
+
+use Ibexa\Domain\Discount\DiscountInterface;
+use Ibexa\Domain\Product\Catalog;
+
 readonly class DiscountCalculatorService
 {
 

@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-readonly class FixedDiscount extends AbstractDiscount
+namespace Ibexa\Domain\Discount;
+
+use Ibexa\Domain\Product\ProductInterface;
+
+class FixedDiscount extends AbstractDiscount
 {
     public function __construct(
-        private int    $amount,
-        private string $currency,
-        private array  $applicableProducts = [],
-        private int    $priority = 0,
-        private bool   $exclusive = false
+        private readonly int    $amount,
+        private readonly string $currency,
+        protected array         $applicableProducts = [],
+        protected int           $priority = 0,
+        protected bool          $exclusive = false
     ) {
         parent::__construct($applicableProducts, $priority, $exclusive);
     }

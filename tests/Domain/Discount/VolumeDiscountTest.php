@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace tests\Domain\Discount;
 
+use Ibexa\Domain\Discount\VolumeDiscount;
+use Ibexa\Domain\Product\Price;
+use Ibexa\Domain\Product\Product;
 use PHPUnit\Framework\TestCase;
-use Price;
-use Product;
-use VolumeDiscount;
 
 class VolumeDiscountTest extends TestCase
 {

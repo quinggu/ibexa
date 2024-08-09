@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace tests\Domain\Product;
 
-use Catalog;
+use Ibexa\Domain\Product\Catalog;
+use Ibexa\Domain\Product\Price;
+use Ibexa\Domain\Product\Product;
 use PHPUnit\Framework\TestCase;
-use Price;
-use Product;
 
 class CatalogTest extends TestCase
 {

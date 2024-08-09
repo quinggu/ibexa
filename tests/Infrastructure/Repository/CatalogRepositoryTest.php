@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace tests\Infrastructure\Repository;
 
-use Catalog;
-use InMemoryCatalogRepository;
+use Ibexa\Domain\Product\Catalog;
+use Ibexa\Infrastructure\Repository\InMemoryCatalogRepository;
 use PHPUnit\Framework\TestCase;
-use Price;
-use Product;
+use Ibexa\Domain\Product\Price;
+use Ibexa\Domain\Product\Product;
 
 class CatalogRepositoryTest extends TestCase
 {

@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-readonly class PercentageDiscount extends AbstractDiscount
+namespace Ibexa\Domain\Discount;
+
+use Ibexa\Domain\Product\ProductInterface;
+
+class PercentageDiscount extends AbstractDiscount
 {
     public function __construct(
-        private int    $percentage,
-        private array  $applicableProducts = [],
-        private int    $priority = 0,
-        private bool   $exclusive = false
+        private readonly int $percentage,
+        protected array      $applicableProducts = [],
+        protected int        $priority = 0,
+        protected bool       $exclusive = false
     ) {
         parent::__construct($applicableProducts, $priority, $exclusive);
     }

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Ibexa\Domain\Product;
+
 interface ProductInterface
 {
     public function getCode(): string;

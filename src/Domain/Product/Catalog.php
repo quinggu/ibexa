@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Ibexa\Domain\Product;
+
 class Catalog
 {
     public function __construct(
